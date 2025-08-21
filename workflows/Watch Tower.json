@@ -1,0 +1,1627 @@
+{
+  "name": "Watch Tower",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -32,
+        -496
+      ],
+      "id": "b060cba6-45dd-40dc-b3a8-bb63a46889c3",
+      "name": "Telegram Trigger",
+      "webhookId": "8c832298-1453-4ff8-aadc-5f358d83a9b5",
+      "credentials": {
+        "telegramApi": {
+          "id": "AtGPGi2awdnegGwW",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    },
+                    "id": "e43ba79a-5214-4aef-b37d-bc700e5b079a"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Start command"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "19bdc148-510d-41da-9e62-4da7e322759b",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/add ",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Add command"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "73f5a9ab-42c8-4e6a-b18c-dd106708e569",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/list",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "List Command"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0700cb45-1c32-49e0-9fb7-cd33e5ec2b15",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/help",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Help Command"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5149a27a-d101-4718-827b-93f01e12a924",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/remove_",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Remove a program"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        192,
+        -496
+      ],
+      "id": "876b659a-27f8-4c8c-93b2-58cf1f08444d",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "collection": "users",
+        "options": {},
+        "query": "={\"user_id\":{{ $json.user_id }}}"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        832,
+        -848
+      ],
+      "id": "fdec5d97-7224-414d-a1b5-ee7d8e36d489",
+      "name": "Get User Data",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "3ihzKVBeJLEURnW3",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "812a9e23-f428-40ef-8a3f-5b49f1c29ac8",
+              "leftValue": "={{ $json._id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1024,
+        -848
+      ],
+      "id": "58f486e3-dc40-4dbf-90c4-88551b7e2123",
+      "name": "Is user exists?"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "users",
+        "fields": "=user_id, first_name",
+        "options": {
+          "useDotNotation": false
+        }
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        1456,
+        -832
+      ],
+      "id": "c03679c0-4a30-405e-9bef-3b1d1c6519a7",
+      "name": "Add new user",
+      "credentials": {
+        "mongoDb": {
+          "id": "3ihzKVBeJLEURnW3",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.user_id }}",
+        "text": "=Hi {{ $json.first_name }} This is first time you are using bot\\.\nyou can add target list like this:\nHackerOne:\n`/add https://hackerone\\.com/greenhouse`\n\nBugCrowd:\n`/add https://bugcrowd\\.com/engagements/rapyd`",
+        "additionalFields": {
+          "parse_mode": "MarkdownV2"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1632,
+        -832
+      ],
+      "id": "e5869857-1e92-4bba-885b-be661530e79e",
+      "name": "Help Message",
+      "webhookId": "bdb4e542-a64e-430c-9214-e5c91d1b84ae",
+      "credentials": {
+        "telegramApi": {
+          "id": "AtGPGi2awdnegGwW",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"user_id\": {{ $json.message.from.id }},\n  \"first_name\": \"{{ $json.message.from.first_name }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        608,
+        -848
+      ],
+      "id": "c0826984-fc2c-4738-885d-2e0c89829794",
+      "name": "Convert for Find User"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n\"user_id\": {{ $('Convert for Find User').item.json.user_id }},\n\"first_name\": \"{{ $('Convert for Find User').item.json.first_name }}\"\n} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1232,
+        -832
+      ],
+      "id": "4d540ee1-b90c-4439-801b-c48b38d27253",
+      "name": "Convert data for New user"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"user_id\": {{ $json.message.from.id }},\n  \"first_name\": \"{{ $json.message.from.first_name }}\",\n\"text\":\"{{ $json.message.text }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        736,
+        -16
+      ],
+      "id": "cda7785e-e738-4c98-8124-a6a08d6f40e5",
+      "name": "Convert data for new target"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const textValue = item.json.text || \"\";\n\n  // Regex to match HackerOne or Bugcrowd URLs (ignore query params) and extract program\n  const regex = /https?:\\/\\/(?:www\\.)?(hackerone\\.com\\/([^\\/\\s\\?]+)|bugcrowd\\.com\\/engagements\\/([^\\/\\s\\?]+))/;\n  const match = textValue.match(regex);\n\n  if (match) {\n    const program = match[2] || match[3]; // HackerOne match[2], Bugcrowd match[3]\n\n    // Remove trailing slash if exists\n    item.json.url = `https://${match[1]}`.replace(/\\/$/, \"\");\n    item.json.program = program;\n    item.json.platform = match[2] ? \"hackerone\" : \"bugcrowd\";\n  } else {\n    item.json.url = \"\";\n    item.json.program = \"\";\n    item.json.platform = \"not_defined\";\n  }\n\n  return item;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        944,
+        -16
+      ],
+      "id": "24637c27-d1c2-4d77-8a71-ca71cb3f1022",
+      "name": "Extract URL"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.user_id }}",
+        "text": "=Welcome back {{ $json.first_name }}.\nIf you need any thing just send me /help",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1232,
+        -1024
+      ],
+      "id": "06a8a503-d06c-48a1-a723-798dd19946a9",
+      "name": "Just an old user",
+      "webhookId": "42af2e17-d8ef-44e8-bb2e-604045e262ae",
+      "credentials": {
+        "telegramApi": {
+          "id": "AtGPGi2awdnegGwW",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "Hi\\! Here are the commands you can use:\n\n1\\. **List** \\- Show the list of your targets:\n`/list`\n\n\\-\\-\\-\\-\n\n2\\. **Add** \\- Add a target to your list from one of these platforms:\n\n2\\.1 HackerOne:  \n`/add https://hackerone\\.com/greenhouse`\n\n2\\.2 Bugcrowd:  \n`/add https://bugcrowd\\.com/engagements/rapyd`\n\n\\-\\-\\-\\-\n\n3\\. **Remove** \\- Remove a target from your list:\n\n3\\.1 HackerOne:  \n`/remove greenhouse`  \n\n3\\.2 Bugcrowd:  \n`/remove rapyd`\n",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "MarkdownV2"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        608,
+        640
+      ],
+      "id": "8f3458f9-ccba-4139-93d7-dfc4e647033c",
+      "name": "Send a text message2",
+      "webhookId": "47a7412e-8ad4-49aa-a611-b8c9943515e6",
+      "credentials": {
+        "telegramApi": {
+          "id": "AtGPGi2awdnegGwW",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"user_id\": {{ $json.message.from.id }},\n  \"first_name\": \"{{ $json.message.from.first_name }}\",\n\"text\":\"{{ $json.message.text }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        416
+      ],
+      "id": "2a970f96-9fd2-4f4a-9b38-9424e7b73f48",
+      "name": "Convert data for new target1"
+    },
+    {
+      "parameters": {
+        "collection": "targets",
+        "options": {},
+        "query": "={\"user_id\":{{ $json.user_id }}}"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        880,
+        416
+      ],
+      "id": "07b90606-24c9-4583-a0d6-f378d60aef4a",
+      "name": "MongoDB1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "3ihzKVBeJLEURnW3",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 100000000000000000000,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1088,
+        464
+      ],
+      "id": "2a0ed3fe-e693-4b57-b485-e16bbe045d16",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.user_id }}",
+        "text": "=🎯 *Target*\n\n🏣 Platform: `{{ $json.platform }}`\n📟 Program: `{{ $json.program }}`\n🔗 URL: [Open in browser]({{ $json.url }})\n\n❌ Remove Command:\n/remove\\_{{ $json.platform }}\\_{{ $json.program }}\n",
+        "additionalFields": {
+          "appendAttribution": false,
+          "disable_web_page_preview": true,
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1280,
+        544
+      ],
+      "id": "f03b481d-feb2-4a34-a633-ee387240e952",
+      "name": "Send a text message3",
+      "webhookId": "8e9207f7-7fd0-415e-9dda-75fa357772f0",
+      "credentials": {
+        "telegramApi": {
+          "id": "AtGPGi2awdnegGwW",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"user_id\": \"{{ $json.message.chat.id }}\",\n  \"command\": \"{{ $json.message.text }}\"\n}\n ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        816
+      ],
+      "id": "4a423867-8c90-4de6-a25b-075a9aec9f54",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  const commandValue = item.json.command || \"\";\n\n  // Match pattern: remove_<platform>_<program>\n  const match = commandValue.match(/^\\/remove_([^_]+)_(.+)$/);\n\n  if (match) {\n    item.json.platform = match[1];\n    item.json.program = match[2];\n  } else {\n    item.json.platform = \"\";\n    item.json.program = \"\";\n  }\n\n  return item;\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        1024
+      ],
+      "id": "0a4fd994-c6f4-4baf-af8d-64dda9fbed7e",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n  \"user_id\":{{ $json.user_id }},\n\"platform\":\"{{ $json.platform }}\",\n\"program\":\"{{ $json.program }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        944,
+        1024
+      ],
+      "id": "4a4c5138-8c43-4f48-9c99-fdee2608c63b",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "collection": "targets",
+        "query": "={\"user_id\":{{ $json.user_id }}, \"platform\":\"{{ $json.platform }}\", \"program\":\"{{ $json.program }}\"}"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        1152,
+        1024
+      ],
+      "id": "e239d8c3-3bb1-48aa-b9ba-841e41509853",
+      "name": "MongoDB2",
+      "credentials": {
+        "mongoDb": {
+          "id": "3ihzKVBeJLEURnW3",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Edit Fields1').item.json.user_id }}",
+        "text": "=Target *{{ $('Edit Fields1').item.json.program }}* from platform *{{ $('Edit Fields1').item.json.platform }}* removed",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1328,
+        1024
+      ],
+      "id": "52c7f8ea-8fc3-4d1a-95cd-e8edd30f5ab7",
+      "name": "Send a text message4",
+      "webhookId": "c80fb5d3-29b6-4612-81e1-51012f8eafc3",
+      "credentials": {
+        "telegramApi": {
+          "id": "AtGPGi2awdnegGwW",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -32,
+        1728
+      ],
+      "id": "865f6bde-de31-4f5e-8b30-1d114f0b14f9",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "collection": "targets",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        176,
+        1728
+      ],
+      "id": "261f5c07-7d39-4be8-8947-8c37895602f9",
+      "name": "MongoDB3",
+      "credentials": {
+        "mongoDb": {
+          "id": "3ihzKVBeJLEURnW3",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 100000,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        384,
+        1728
+      ],
+      "id": "5e4d86da-6102-4339-8583-7e5a27c3b61a",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.hackerone.com/v1/hackers/programs/{{ $json.program }}/structured_scopes?page[size]=100",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "authorization",
+              "value": "Basic BASE64(H1_USERNAME:H1_API_KEY)"
+            }
+          ]
+        },
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1000
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        1680
+      ],
+      "id": "fa9156fb-dc63-4a8e-830e-90257766bdd8",
+      "name": "HTTP Request",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "batchSize": "=10000000",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1360,
+        1552
+      ],
+      "id": "86b01f55-c35d-4f4d-9197-0976aac7cfed",
+      "name": "Loop Over Items2",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Flatten and extract asset_identifier from all items\nreturn items.flatMap(item => {\n  const dataArray = item.json.data || [];\n  return dataArray.map(scope => ({\n    json: {\n      asset_identifier: scope.attributes.asset_identifier,\n      user_id: $('Loop Over Items1').first().json.user_id,\n      platform: $('Loop Over Items1').first().json.platform,\n      program:$('Loop Over Items1').first().json.program\n    }\n  }));\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1168,
+        1648
+      ],
+      "id": "02275d54-d5db-4dea-b665-547bc8046946",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "collection": "scope",
+        "options": {},
+        "query": "={\n  \"asset_identifier\": \"{{ $json.asset_identifier }}\"\n}"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        1808,
+        1392
+      ],
+      "id": "be21def9-25da-470c-b682-43c29837d0b0",
+      "name": "MongoDB4",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "3ihzKVBeJLEURnW3",
+          "name": "MongoDB account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "scope",
+        "fields": "=asset_identifier, platform, program, status",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        2704,
+        1344
+      ],
+      "id": "669f4301-2c1e-4143-92c3-cc70f124482d",
+      "name": "MongoDB5",
+      "credentials": {
+        "mongoDb": {
+          "id": "3ihzKVBeJLEURnW3",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={ \"asset_identifier\": \"{{ $json.asset_identifier }}\",\n\"platform\":\"{{ $json.platform }}\", \"program\":\"{{ $json.program }}\", \"user_id\":{{ $json.user_id }}, \"status\":\"new\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2448,
+        1456
+      ],
+      "id": "f553e29d-c3eb-4113-b07d-49e4338a97c3",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.user_id }}",
+        "text": "=New target found on {{ $json.program }} in platform {{ $json.platform }}:\nasset_identifier: <code>{{ $json.asset_identifier }}</code>",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2736,
+        1824
+      ],
+      "id": "2c4294bd-8830-496f-98c5-789595df56c4",
+      "name": "Send a text message6",
+      "webhookId": "9d793c54-c817-4f8f-8552-8edd66da78c4",
+      "credentials": {
+        "telegramApi": {
+          "id": "AtGPGi2awdnegGwW",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.url }}",
+                    "rightValue": "https://hackerone.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    },
+                    "id": "3baadb62-f217-4fc4-bc4b-ad68f2a309dd"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Hackerone"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9a75b92a-e691-428c-b129-bf898a04185a",
+                    "leftValue": "={{ $json.url }}",
+                    "rightValue": "https://bugcrowd.com",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Bugcrowd"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1152,
+        -16
+      ],
+      "id": "46be6d48-f02c-407f-8cb8-940e44095a36",
+      "name": "Switch1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "asset_identifier, platform, program, user_id",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1616,
+        1568
+      ],
+      "id": "fa854216-9196-49e4-a353-036e0798e284",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "asset_identifier",
+              "field2": "asset_identifier"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.compareDatasets",
+      "typeVersion": 2.3,
+      "position": [
+        2080,
+        1408
+      ],
+      "id": "029006d1-ccd5-49db-8a0d-bf83d1804f2e",
+      "name": "Compare Datasets"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.platform }}",
+                    "rightValue": "hackerone",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "54d33c41-9d10-4dd5-9a3b-11f050e8d27a"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "HackerOne"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5f7726de-c233-49bb-87d7-723b1346d7bc",
+                    "leftValue": "={{ $json.platform }}",
+                    "rightValue": "bugcrowd",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "BugCrowd"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        640,
+        1744
+      ],
+      "id": "316a964d-747d-4df1-ad8b-ee5410895861",
+      "name": "Switch2"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1376,
+        -320
+      ],
+      "id": "9d623e87-a0b5-401c-973a-21d28cdd0be4",
+      "name": "Validate target"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Switch').item.json.message.chat.id }}",
+        "text": "This is not vaild target",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1888,
+        16
+      ],
+      "id": "0f3e7e2a-ff16-45fa-bfb8-ff056826c39a",
+      "name": "Not valid target message",
+      "webhookId": "902fe85a-b055-40ef-a37f-7de58700fcf6",
+      "credentials": {
+        "telegramApi": {
+          "id": "AtGPGi2awdnegGwW",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6adb240b-d9b9-4c90-8815-f75a2bfb41b3",
+              "leftValue": "={{ $json.data }}",
+              "rightValue": "controller_teams",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1600,
+        -320
+      ],
+      "id": "11ca438d-3850-41b5-be55-790a6ae0dc13",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.user_id }}",
+        "text": "You added this target in your list before.",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2896,
+        -224
+      ],
+      "id": "16a9cbb2-8f57-4d54-8d0b-56d1dfad942b",
+      "name": "Send a text message1",
+      "webhookId": "8b0bab2e-b7f2-450f-83e5-f0dd1d4a16e0",
+      "credentials": {
+        "telegramApi": {
+          "id": "AtGPGi2awdnegGwW",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.user_id }}",
+        "text": "I add target under your watch lists.|Now you can see your targets using /list",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3328,
+        32
+      ],
+      "id": "911427b7-4e50-4224-8f15-b7d2a0520f85",
+      "name": "Send a text message",
+      "webhookId": "944eea88-b3e8-4a28-8d59-68aaa5763c6e",
+      "credentials": {
+        "telegramApi": {
+          "id": "AtGPGi2awdnegGwW",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={\n\"user_id\":{{ $('Extract URL').item.json.user_id }},\n\"program\":\"{{ $('Extract URL').item.json.program }}\",\n\"platform\":\"{{ $('Extract URL').item.json.platform }}\",\n\"url\":\"{{ $('Extract URL').item.json.url }}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2864,
+        32
+      ],
+      "id": "0541905d-b9a2-4ca5-9f37-d6718728265d",
+      "name": "Convert data for Insert target"
+    },
+    {
+      "parameters": {
+        "collection": "targets",
+        "options": {},
+        "query": "={\"user_id\":{{ $('Switch1').item.json.user_id }}, \"program\": \"{{ $('Switch1').item.json.program }}\", \"platform\":\"{{ $('Switch1').item.json.platform }}\"}"
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        2288,
+        16
+      ],
+      "id": "7ddf74bd-90d7-4b0f-b2fd-b33da8d1fa91",
+      "name": "Get user target",
+      "alwaysOutputData": true,
+      "credentials": {
+        "mongoDb": {
+          "id": "3ihzKVBeJLEURnW3",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "812a9e23-f428-40ef-8a3f-5b49f1c29ac8",
+              "leftValue": "={{ $json._id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2496,
+        16
+      ],
+      "id": "b43d56d0-f430-411f-9aec-377d3b36a7c1",
+      "name": "Has user this target?"
+    },
+    {
+      "parameters": {
+        "operation": "insert",
+        "collection": "targets",
+        "fields": "platform, program, url, user_id",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.2,
+      "position": [
+        3120,
+        32
+      ],
+      "id": "d83d1dd6-a74d-4d90-a456-47b0afad5cf5",
+      "name": "MongoDB",
+      "credentials": {
+        "mongoDb": {
+          "id": "3ihzKVBeJLEURnW3",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "# Watch Tower\n**This will run each 1H to check is there new scope in selected targets**",
+        "height": 864,
+        "width": 3696
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        1248
+      ],
+      "id": "fadc4453-ab5f-46a7-960c-e2bba51c89b1",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "height": 2320,
+        "width": 3696,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        -1136
+      ],
+      "id": "7cc38258-7333-40e7-a82e-422c86eac5bc",
+      "name": "Sticky Note1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Convert for Find User",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert data for new target",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert data for new target1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User Data": {
+      "main": [
+        [
+          {
+            "node": "Is user exists?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is user exists?": {
+      "main": [
+        [
+          {
+            "node": "Just an old user",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert data for New user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add new user": {
+      "main": [
+        [
+          {
+            "node": "Help Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert for Find User": {
+      "main": [
+        [
+          {
+            "node": "Get User Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert data for New user": {
+      "main": [
+        [
+          {
+            "node": "Add new user",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert data for new target": {
+      "main": [
+        [
+          {
+            "node": "Extract URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract URL": {
+      "main": [
+        [
+          {
+            "node": "Switch1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert data for new target1": {
+      "main": [
+        [
+          {
+            "node": "MongoDB1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Send a text message3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message3": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "MongoDB2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB2": {
+      "main": [
+        [
+          {
+            "node": "Send a text message4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message4": {
+      "main": [
+        []
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "MongoDB3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Switch2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items2": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB4": {
+      "main": [
+        [
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Send a text message6",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "MongoDB5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB5": {
+      "main": [
+        []
+      ]
+    },
+    "Send a text message6": {
+      "main": [
+        []
+      ]
+    },
+    "Switch1": {
+      "main": [
+        [
+          {
+            "node": "Validate target",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "MongoDB4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Compare Datasets",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Compare Datasets": {
+      "main": [
+        [],
+        [],
+        [],
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate target": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Get user target",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Not valid target message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert data for Insert target": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get user target": {
+      "main": [
+        [
+          {
+            "node": "Has user this target?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has user this target?": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert data for Insert target",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0a6baeb1-f9c4-4e9e-88b7-a6c5fc7d536f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f0bc52ca07f470600b48cfe20b70b23a4d1dbe67f05be722a19802d3a867b5a9"
+  },
+  "id": "WiXIyQoLrewZLm8P",
+  "tags": []
+}
