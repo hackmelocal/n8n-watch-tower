@@ -96,4 +96,3 @@ Contributions, ideas, and improvements are welcome!
 Feel free to fork the repository, open an issue, or submit a pull request.  
 
 I’d be happy if you also contribute to the development of this project.
-
